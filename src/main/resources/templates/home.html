@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cat App</title>
+    <link rel="stylesheet" th:href="@{/css/destyle.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>猫アプリ</h1>
+
+        <h2>
+            あなたの猫を育てていきましょう
+        </h2>
+
+        <div>
+            <a th:href="@{/cats/new}">
+                猫を登録する
+            </a>
+        </div>
+
+        <br>
+
+        <div>
+            <a th:href="@{/cats}">
+                登録した猫を見る
+            </a>
+        </div>
+    </div>
+</body>
+</html>

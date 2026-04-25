@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>猫一覧</title>
+    <link rel="stylesheet" th:href="@{/css/destyle.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="cat-list-page">
+
+    <div class="container">
+
+        <h2>あなたの猫一覧</h2>
+
+        <div th:if="${#lists.isEmpty(cats)}">
+            <p>まだ猫が登録されていません。</p>
+        </div>
+
+        <h2 th:if="${!#lists.isEmpty(cats)}"
+            th:text="${cats[0].name} + ' のようす'"></h2>
+
+        <div th:each="cat : ${cats}">
+
+            <div>
+                <img id="catImage" th:src="@{/images/wait.png}">
+                <br>
+                <span id="catStatusText">
+                        まったりしています
+                    </span>
+            </div>
+
+            <!--            <div>-->
+            <!--                <img alt="食べる">-->
+            <!--                <br>ごはんを食べています-->
+            <!--            </div>-->
+
+            <!--            <div th:if="${cat.imageStatus == 'playing'}">-->
+            <!--                <img th:src="@{/images/play.png}" alt="遊ぶ">-->
+            <!--                <br>元気に遊んでいます-->
+            <!--            </div>-->
+        </div>
+
+        <table border="1" th:if="${!#lists.isEmpty(cats)}">
+
+
+            <thead>
+            <tr>
+                <th>名前</th>
+                <th>レベル</th>
+                <th>満腹度</th>
+                <th>元気</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cat : ${cats}">
+                <td th:text="${cat.name}"></td>
+                <td>
+                    <span id="levelValue"
+                          th:text="${cat.level}">
+                    </span>
+                </td>
+                <td>
+                    <span id="hungerValue" th:text="${cat.hunger}"></span>
+                </td>
+                <td>
+                    <span id="energyValue" th:text="${cat.energy}"></span>
+                </td>
+                <td>
+                    <button type="button" th:onclick="'feedCat(' + ${cat.id} + ')'">
+                        ごはんをあげる
+                    </button>
+
+                    <button type="button"
+                            th:onclick="'playCat(' + ${cat.id} + ')'">
+                        遊ぶ
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <a th:href="@{/cats/new}">
+            新しい猫を登録する
+        </a>
+
+    </div>
+
+    <script th:inline="javascript">
+
+        function feedCat(catId) {
+            fetch('/cats/' + catId + '/feed', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                //満腹度更新
+                document.getElementById("hungerValue").innerText = data.hunger;
+                document.getElementById("energyValue").innerText = data.energy;
+                document.getElementById("levelValue").innerText = data.level;
+
+                if (data.bonusMessage) {
+                    alert(data.bonusMessage);
+                }
+
+                //画像更新
+                if (data.imageStatus === "eating") {
+                    document.getElementById("catImage").src = "/images/eat.png";
+                    document.getElementById("catStatusText").innerText = "ごはんを食べています";
+                }
+
+                setTimeout(() => {
+                    document.getElementById("catImage").src = "/images/wait.png";
+                    document.getElementById("catStatusText").innerText = "まったりしています";
+                }, 2500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function playCat(catId) {
+            fetch('/cats/' + catId + '/play', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                //元気度更新
+                document.getElementById("hungerValue").innerText = data.hunger;
+                document.getElementById("energyValue").innerText = data.energy;
+                document.getElementById("levelValue").innerText = data.level;
+
+                if (data.bonusMessage) {
+                    alert(data.bonusMessage);
+                }
+
+                if (data.imageStatus === "playing") {
+                    document.getElementById("catImage").src = "/images/play.png";
+                    document.getElementById("catStatusText").innerText = "元気に遊んでいます";
+                }
+
+                setTimeout(() => {
+                    document.getElementById("catImage").src = "/images/wait.png";
+                    document.getElementById("catStatusText").innerText = "まったりしています";
+                }, 2500);
+
+            });
+        }
+    </script>
+</body>
+</html>
