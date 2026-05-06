@@ -23,6 +23,9 @@ public class Cat {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    private int stamina;
+
     //getter / setter
 
     public Long getId() {
@@ -75,5 +78,13 @@ public class Cat {
 
     public void setImageStatus(String imageStatus) {
         this.imageStatus = imageStatus;
+    }
+
+    public int getStamina() {
+        return stamina;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
     }
 }
