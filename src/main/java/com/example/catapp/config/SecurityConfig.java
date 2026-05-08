@@ -37,7 +37,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register",
+                        .requestMatchers("/",
+                                            "/register",
                                             "/login",
                                             "/css/**",
                                             "/js/**",
@@ -47,7 +48,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/cats", true)
                         .permitAll()
                 )
                 .authenticationProvider(authenticationProvider());
