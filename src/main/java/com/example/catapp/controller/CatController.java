@@ -225,4 +225,33 @@ public class CatController {
 
         return response;
     }
+
+    @ResponseBody
+    @GetMapping("/{id}/status")
+    public Map<String, Object> getStatus(@PathVariable Long id) {
+
+        Cat cat = catRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cat not found"));
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("hunger", cat.getHunger());
+        response.put("energy", cat.getEnergy());
+        response.put("stamina", cat.getStamina());
+        response.put("level", cat.getLevel());
+
+        String condition = "normal";
+
+        if (cat.getHunger() <= 20) {
+            condition = "hungry";
+        }
+
+        else if (cat.getEnergy() <= 20) {
+            condition = "tired";
+        }
+
+        response.put("condition", condition);
+
+        return response;
+    }
 }
